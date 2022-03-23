@@ -25,7 +25,7 @@ fna = [line.strip() for line in f.readlines()]
 f.close()
 
 # final headers we want: 
-# '> 1077 reference=gi|378947941|ref|NC_016830|pseudocap|266 position=complement(3371764..3371793) description="[Pseudomonas fluorescens F113 chromosome, complete genome.]"'
+# '>1077 reference=gi|378947941|ref|NC_016830|pseudocap|266 position=complement(3371764..3371793) description="[Pseudomonas fluorescens F113 chromosome, complete genome.]"'
 header      = fna[0][1:]
 reference   = header.split(" ",   maxsplit=1)[0]
 description = header.split(" ",   maxsplit=1)[1]
@@ -106,7 +106,7 @@ choices_rev = np.array(hits_rev)[np.random.choice(pool, size=int(cov/2) * len(hi
 with open("experimental_reads.fa", "w") as f:
     for n, c in enumerate(choices):
         start = int(c[0]); end = int(c[1])
-        f.write("> " + str(n) + \
+        f.write(">" + str(n) + \
                 " reference=" + header + \
                 " position=" + str(start) + ".." + str(end) + \
                 " description=" + description + \
@@ -115,7 +115,7 @@ with open("experimental_reads.fa", "w") as f:
         
     for n, c in enumerate(choices_rev):
         start = int(c[0]); end = int(c[1])
-        f.write("> " + str(n) + \
+        f.write(">" + str(n) + \
                 " reference=" + header + \
                 " position=complement(" + str(start) + ".." + str(end) + ")" \
                 " description=" + description + \
