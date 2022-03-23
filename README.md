@@ -8,5 +8,9 @@ Samples short sequences with a given coverage and read length from a given genom
 
 `NNNNNNNNNNNNTANNNNNNNNNNNN`
 
+Notably, this script takes a list of "genes to exclude" (to simulate essentiality). If the base pairs after "TA" are included in the "genes to exclude", no reads will be generated from that "TA".
+
+The essentiality analysis can be carried out by aligning with a short read aligner, formatting to .wig and using [Transit](https://github.com/mad-lab/transit). 
+
 ### rm_selected_genes.py
-Removes specific genes from a .fna file given a .tsv annotation file. In our example, we remove chemotaxis and motility genes. The filtered genome will then be the input for read_simulator.py in order to simulate essentiality. The essentiality analysis can be carried out by aligning with a short read aligner, formatting to .wig and using [Transit](https://github.com/mad-lab/transit). 
+Removes specific genes from a .fna file given a .tsv annotation file. In our example, we remove chemotaxis and motility genes. The filtered genome will serve as a reference for visualization on software like IGV.
