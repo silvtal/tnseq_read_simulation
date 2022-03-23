@@ -7,11 +7,10 @@ Created on Mon Feb 21 13:02:33 2022
 """
 
 # =============================================================================
-# load modules, data and chose excluded genes
+# load modules, data and choose excluded genes
 # =============================================================================
 import pandas as pd
 import os
-import re
 
 os.chdir("/home/silvia/AAA/2022-02-21_TnSeq_simul")
 
@@ -35,8 +34,8 @@ lst = ["Motility protein A",
 
 excluded = tab_annot.query('productfeat in @lst')
 
-print("Mock genes to exclude")
-print("---------------------")
+print("Genes to exclude")
+print("-----------------")
 print(excluded)
 
 # =============================================================================
@@ -50,13 +49,16 @@ header = fna[0]
 genome = fna[1]
 
 # get the sequences we want to remove
-exclu_seqs = []
+s_e = []
 for index, row in excluded.iterrows():
-    s_e = sorted([row["start"],row["end"]])
-    exclu_seqs.append(genome[(s_e[0]-1):(s_e[1])]) # -1 at the start 'cause python
+    s_e.append(range(row["start"]-1, row["end"])) # -1 at the start because python
 
-# remove repeated sequences and exclude them
-genomenew = re.sub(r'|'.join(map(re.escape, set(exclu_seqs))), '', genome)
+# and remove them
+to_include = r = set(range(len(genome)))
+for r in s_e:
+    to_include -= set(r)
+    
+genomenew = "".join([letter for idx, letter in enumerate(genome) if idx in to_include])
 
 print("length before excluding: "+str(len(genome)))
 print("length AFTER excluding: "+str(len(genomenew)))

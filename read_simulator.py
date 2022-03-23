@@ -7,14 +7,20 @@ Created on Tue Mar 22 09:55:57 2022
 """
 
 # =============================================================================
-# Load modules, load genome
+# load modules, reference genome and annotations
 # =============================================================================
+import pandas as pd
 import os
 import numpy as np
 
 os.chdir("/home/silvia/AAA/2022-02-21_TnSeq_simul")
 
-f = open("filtered_F113.fna", "r")
+in_file = "F113newannot_2020.csv" # sep = ","
+
+tab_annot = pd.read_csv(in_file, sep=",", 
+                        usecols=lambda x: x in ["length", "start", "end", "strand", "productfeat"])
+
+f = open("F113.fna", "r")
 fna = [line.strip() for line in f.readlines()]
 f.close()
 
@@ -25,6 +31,39 @@ reference   = header.split(" ",   maxsplit=1)[0]
 description = header.split(" ",   maxsplit=1)[1]
 genome      = fna[1]
 
+
+# =============================================================================
+# choose excluded genes
+# =============================================================================
+lst = ["Motility protein A",
+       "Motility protein B",
+       "Methyl-accepting chemotaxis protein CtpL",
+       "Methyl-accepting chemotaxis protein McpS",
+       "Methyl-accepting chemotaxis protein McpU",
+       "Methyl-accepting chemotaxis protein McpP",
+       "Methyl-accepting chemotaxis protein PctA",
+       "Chemotaxis protein CheY",
+       "Chemotaxis protein CheW"]
+
+
+excluded = tab_annot.query('productfeat in @lst')
+
+print("Genes to exclude")
+print("-----------------")
+print(excluded)
+
+
+# =============================================================================
+# save the included ranges
+# =============================================================================
+s_e = []
+for index, row in excluded.iterrows():
+    s_e.append(range(row["start"]-1, row["end"])) # -1 at the start because python
+
+to_include = r = set(range(len(genome)))
+for r in s_e:
+    to_include -= set(r)
+    
 # =============================================================================
 # Find all instances of "TA" and save the 26 bp area around them
 # =============================================================================
@@ -46,9 +85,11 @@ def findall(p, s, l=0):
             
 mylen = 26
 
-hits     = [i for i in findall('TA', genome, l = mylen) if (i[0] * i[1] > 0)]
-hits_rev = [i for i in findall('TA', genome[::-1], l = mylen) if (i[0] * i[1] > 0)]
-
+# select valid ones
+hits     = [i for i in findall('TA', genome, l = mylen) 
+            if ((i[0] * i[1] > 0) and (i[1]-1 in to_include))]
+hits_rev = [i for i in findall('AT', genome, l = mylen) 
+            if ((i[0] * i[1] > 0) and (i[1]-1 in to_include))]
 
 
 # =============================================================================
