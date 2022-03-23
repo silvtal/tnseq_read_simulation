@@ -47,7 +47,7 @@ def findall(p, s, l=0):
 mylen = 26
 
 hits     = [i for i in findall('TA', genome, l = mylen) if (i[0] * i[1] > 0)]
-# hits_rev = [i for i in findall('TA', genome[::-1], l = mylen) if (i[0] * i[1] > 0)]
+hits_rev = [i for i in findall('TA', genome[::-1], l = mylen) if (i[0] * i[1] > 0)]
 
 
 
@@ -57,9 +57,9 @@ hits     = [i for i in findall('TA', genome, l = mylen) if (i[0] * i[1] > 0)]
 # Randomize with desired coverage
 cov = 30
 pool = np.array(range(len(hits)))
-choices = np.array(hits)[np.random.choice(pool, size=cov * len(hits), replace=True)]
-# pool = np.array(range(len(hits_rev)))
-# choices_rev = np.array(hits)[np.random.choice(pool, size=cov * len(hits), replace=True)]
+choices = np.array(hits)[np.random.choice(pool, size=int(cov/2) * len(hits), replace=True)]
+pool = np.array(range(len(hits_rev)))
+choices_rev = np.array(hits_rev)[np.random.choice(pool, size=int(cov/2) * len(hits_rev), replace=True)]
 
 # save file
 with open("experimental_reads.fa", "w") as f:
@@ -68,6 +68,15 @@ with open("experimental_reads.fa", "w") as f:
         f.write("> " + str(n) + \
                 " reference=" + header + \
                 " position=" + str(start) + ".." + str(end) + \
+                " description=" + description + \
+                "\n")
+        f.write(genome[start:end] + "\n")
+        
+    for n, c in enumerate(choices_rev):
+        start = int(c[0]); end = int(c[1])
+        f.write("> " + str(n) + \
+                " reference=" + header + \
+                " position=complement(" + str(start) + ".." + str(end) + ")" \
                 " description=" + description + \
                 "\n")
         f.write(genome[start:end] + "\n")
