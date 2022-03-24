@@ -14,3 +14,6 @@ The essentiality analysis can be carried out by aligning with a short read align
 
 ### rm_selected_genes.py
 Removes specific genes from a .fna file given a .tsv annotation file. In our example, we remove chemotaxis and motility genes. The filtered genome will serve as a reference for visualization on software like IGV.
+
+### fix2var.py
+Simple tool useful for changing fixedStep .wig format to variableStep (the one accepted by Transit)
