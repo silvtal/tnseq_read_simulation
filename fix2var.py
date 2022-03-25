@@ -36,7 +36,7 @@ with open(var_wig, "w") as out:
         # if it's a "range" line, write one line for each position
         if l[0] == "g":            
             l = l.split("\t")
-            rng = range(int(float(l[1])), 
+            rng = range(int(float(l[1]))+1, 
                         int(float(l[2]))+1)
             for p in rng:
                 out.write(str(p) + "\t" + l[3] + "\n")
