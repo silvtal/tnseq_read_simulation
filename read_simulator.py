@@ -87,7 +87,7 @@ mylen = 26
 
 # select valid ones
 hits     = [i for i in findall('TA', genome, l = mylen) 
-            if ((i[0] * i[1] > 0) and (i[1]-1 in to_include))]
+            if ((i[0] * i[1] > 0) and (np.mean(i)+1.5 in to_include))]
 
 # =============================================================================
 # Create FASTA entries
@@ -95,8 +95,8 @@ hits     = [i for i in findall('TA', genome, l = mylen)
 # Randomize with desired coverage
 cov = 30
 pool = np.array(range(len(hits)))
-choices = np.array(hits)[np.random.choice(pool, size=int(cov) * len(hits), replace=True)]
-
+choices = np.array(hits)[np.random.choice(pool, size=round(cov * (len(genome)/mylen)), replace=True)]
+                                                           # num of reads equiv to coverage of x30
 # save file
 with open("experimental_reads.fa", "w") as f:
     for n, c in enumerate(choices):
