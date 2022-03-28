@@ -87,7 +87,7 @@ mylen = 26
 
 # select valid ones
 hits     = [i for i in findall('TA', genome, l = mylen) 
-            if ((i[0] * i[1] > 0) and (np.mean(i)+1.5 in to_include))]
+            if ((i[0] * i[1] > 0) and (np.mean(i)+0.5 in to_include))]
 
 # =============================================================================
 # Create FASTA entries
@@ -106,4 +106,4 @@ with open("experimental_reads.fa", "w") as f:
                 " position=" + str(start) + ".." + str(end) + \
                 " description=" + description + \
                 "\n")
-        f.write(genome[start:end] + "\n")
+        f.write(genome[start:end+1] + "\n")
